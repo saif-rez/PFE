@@ -13,6 +13,9 @@ function parseAddress(from) {
 
 const transporter = {
   sendMail: async ({ from, to, subject, html }) => {
+    if (!process.env.BREVO_API_KEY) {
+      throw new Error('BREVO_API_KEY manquant — vérifiez les variables d\'environnement.');
+    }
     try {
       const { data } = await axios.post(
         BREVO_API_URL,
