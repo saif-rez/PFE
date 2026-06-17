@@ -45,6 +45,7 @@ router.post('/', verifyAdmin, async (req, res) => {
         projetNom = projet?.nom || null;
       }
       sendWelcomeEmail({ chefNom: nom, chefEmail: email, motDePasse: password, projetNom })
+        .then(info => console.log(`[Welcome] Email accepté par le serveur SMTP pour ${email} —`, JSON.stringify(info)))
         .catch(err => console.error(`[Welcome] Échec envoi email à ${email}:`, err.message));
     }
 
