@@ -13,13 +13,7 @@ services:
         sync: false
       - key: JWT_EXPIRES_IN
         value: 1d
-      - key: SMTP_HOST
-        sync: false
-      - key: SMTP_PORT
-        sync: false
-      - key: SMTP_USER
-        sync: false
-      - key: SMTP_PASS
+      - key: BREVO_API_KEY
         sync: false
       - key: EMAIL_FROM
         sync: false

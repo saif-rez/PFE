@@ -2,7 +2,7 @@ const transporter = require('../config/mailer');
 
 const sendReminderEmail = async ({ chefNom, projetNom, deadline, chefEmail }) => {
   await transporter.sendMail({
-    from: `"Green Impact" <${process.env.SMTP_USER}>`,
+    from: `"Green Impact" <${process.env.EMAIL_FROM}>`,
     to: chefEmail,
     subject: 'Rappel — Soumission rapport semestriel dans 3 jours',
     html: `
@@ -84,7 +84,7 @@ const sendReminderEmail = async ({ chefNom, projetNom, deadline, chefEmail }) =>
 
 const sendOverdueEmail = async ({ chefNom, projetNom, chefEmail }) => {
   await transporter.sendMail({
-    from: `"Green Impact" <${process.env.SMTP_USER}>`,
+    from: `"Green Impact" <${process.env.EMAIL_FROM}>`,
     to: chefEmail,
     subject: 'URGENT — Deadline de soumission dépassée',
     html: `
@@ -169,7 +169,7 @@ const sendOverdueEmail = async ({ chefNom, projetNom, chefEmail }) => {
 
 const sendWelcomeEmail = async ({ chefNom, chefEmail, motDePasse, projetNom }) => {
   await transporter.sendMail({
-    from: `"Green Impact" <${process.env.SMTP_USER}>`,
+    from: `"Green Impact" <${process.env.EMAIL_FROM}>`,
     to: chefEmail,
     subject: 'Bienvenue sur Green Impact — Vos identifiants de connexion',
     html: `
@@ -265,7 +265,7 @@ const sendPasswordResetEmail = async ({ nom, email, resetUrl, cancelUrl, ip, use
   const expiresDateStr = expiresAt.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
 
   await transporter.sendMail({
-    from: `"Green Impact" <${process.env.SMTP_USER}>`,
+    from: `"Green Impact" <${process.env.EMAIL_FROM}>`,
     to: email,
     subject: 'Réinitialisation de votre mot de passe — Green Impact',
     html: `
@@ -372,7 +372,7 @@ const sendPasswordChangedEmail = async ({ nom, email }) => {
   });
 
   await transporter.sendMail({
-    from: `"Green Impact" <${process.env.SMTP_USER}>`,
+    from: `"Green Impact" <${process.env.EMAIL_FROM}>`,
     to: email,
     subject: 'Votre mot de passe a été modifié — Green Impact',
     html: `
@@ -459,7 +459,7 @@ const sendPasswordChangedEmail = async ({ nom, email }) => {
 
 const sendReportApprovedEmail = async ({ chefNom, chefEmail, projetNom, periode }) => {
   await transporter.sendMail({
-    from: `"Green Impact" <${process.env.SMTP_USER}>`,
+    from: `"Green Impact" <${process.env.EMAIL_FROM}>`,
     to: chefEmail,
     subject: `Rapport approuvé — ${projetNom}`,
     html: `
@@ -535,7 +535,7 @@ const sendReportApprovedEmail = async ({ chefNom, chefEmail, projetNom, periode 
 
 const sendReportRejectedEmail = async ({ chefNom, chefEmail, projetNom, periode, raison }) => {
   await transporter.sendMail({
-    from: `"Green Impact" <${process.env.SMTP_USER}>`,
+    from: `"Green Impact" <${process.env.EMAIL_FROM}>`,
     to: chefEmail,
     subject: `Rapport rejeté — ${projetNom}`,
     html: `
