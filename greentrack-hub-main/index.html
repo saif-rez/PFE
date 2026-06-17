@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+    <title>Green Impact Platform — Suivi de l'impact environnemental</title>
+    <meta name="description" content="Plateforme centralisée de suivi de projets environnementaux pour ONG — Green Impact Platform" />
+    <meta name="author" content="Green Impact" />
+    <link rel="icon" type="image/x-icon" href="/favicon1.ico" />
+    <link rel="shortcut icon" href="/favicon1.ico" />
+    <meta property="og:title" content="Green Impact Platform" />
+    <meta property="og:description" content="Plateforme centralisée de suivi de projets environnementaux" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Lovable" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

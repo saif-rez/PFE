@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id                Int          @id @default(autoincrement())
+  nom               String       @db.VarChar(200)
+  acronyme          String?      @db.VarChar(50)
+  categorie         String?      @db.VarChar(100)
+  budget            Decimal      @default(0) @db.Decimal(12, 2)
+  depenses          Decimal      @default(0) @db.Decimal(12, 2)
+  statut            String       @default("Actif")
+  jalons_total      Int          @default(0)
+  jalons_completes  Int          @default(0)
+  date_debut        DateTime?    @db.Date
+  laboratoire       String?      @db.VarChar(200)
+  created_at        DateTime     @default(now())
+
+  users             User[]
+  submissions       Submission[]
+
+  @@map("projects")
+}
+
+model User {
+  id                  Int       @id @default(autoincrement())
+  nom                 String    @db.VarChar(100)
+  email               String    @unique @db.VarChar(100)
+  password            String    @db.VarChar(255)
+  role                String
+  projet_id           Int?
+  created_at          DateTime  @default(now())
+  password_changed_at DateTime?
+
+  project      Project?             @relation(fields: [projet_id], references: [id])
+  submissions  Submission[]
+  comments     Comment[]
+  resetTokens  PasswordResetToken[]
+
+  @@map("users")
+}
+
+model PasswordResetToken {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  token_hash String   @unique
+  expires_at DateTime
+  used       Boolean  @default(false)
+  ip_address String?
+  user_agent String?
+  created_at DateTime @default(now())
+
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("password_reset_tokens")
+}
+
+model Submission {
+  id                 Int       @id @default(autoincrement())
+  projet_id          Int
+  user_id            Int
+  periode            String    @db.VarChar(50)
+  statut             String    @default("en_attente")
+  rapport_data       Json
+  commentaire_rejet  String?
+  date_soumission    DateTime  @default(now())
+  date_decision      DateTime?
+
+  project  Project   @relation(fields: [projet_id], references: [id])
+  user     User      @relation(fields: [user_id], references: [id])
+  comments Comment[]
+
+  @@map("submissions")
+}
+
+model Comment {
+  id            Int      @id @default(autoincrement())
+  submission_id Int
+  admin_id      Int
+  texte         String
+  created_at    DateTime @default(now())
+
+  submission Submission @relation(fields: [submission_id], references: [id])
+  admin      User       @relation(fields: [admin_id], references: [id])
+
+  @@map("comments")
+}

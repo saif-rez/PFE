@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: green-impact-backend
+    runtime: node
+    rootDir: back
+    plan: free
+    buildCommand: npm install && npx prisma migrate deploy
+    startCommand: node server.js
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 1d
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: FLASK_URL
+        sync: false
+
+  - type: web
+    name: green-impact-ai
+    runtime: python
+    rootDir: green-impact-ai
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn predict_api:app --bind 0.0.0.0:$PORT

@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500;1,9..144,600;1,9..144,700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 60 20% 97.6%;
+    --foreground: 160 60% 8%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 160 60% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 60% 8%;
+
+    --primary: 153 71% 17%;
+    --primary-foreground: 60 20% 97.6%;
+
+    --secondary: 153 40% 92%;
+    --secondary-foreground: 153 71% 17%;
+
+    --muted: 150 15% 93%;
+    --muted-foreground: 150 10% 42%;
+
+    --accent: 152 58% 76%;
+    --accent-foreground: 153 71% 17%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 38 92% 14%;
+
+    --success: 152 60% 38%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 150 15% 88%;
+    --input: 150 15% 88%;
+    --ring: 153 71% 17%;
+
+    --radius: 0.625rem;
+
+    --sidebar-background: 153 71% 17%;
+    --sidebar-foreground: 60 20% 97.6%;
+    --sidebar-primary: 152 58% 76%;
+    --sidebar-primary-foreground: 153 71% 17%;
+    --sidebar-accent: 153 60% 22%;
+    --sidebar-accent-foreground: 60 20% 97.6%;
+    --sidebar-border: 153 60% 22%;
+    --sidebar-ring: 152 58% 76%;
+
+    --font-heading: 'Fraunces', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+  }
+}
+
+@layer base {
+  .dark {
+    --background: 160 20% 8%;
+    --foreground: 60 10% 95%;
+
+    --card: 160 18% 11%;
+    --card-foreground: 60 10% 95%;
+
+    --popover: 160 18% 11%;
+    --popover-foreground: 60 10% 95%;
+
+    --primary: 152 58% 60%;
+    --primary-foreground: 160 60% 8%;
+
+    --secondary: 153 25% 18%;
+    --secondary-foreground: 60 10% 90%;
+
+    --muted: 160 15% 16%;
+    --muted-foreground: 150 10% 60%;
+
+    --accent: 153 40% 25%;
+    --accent-foreground: 60 10% 90%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --warning: 38 80% 55%;
+    --warning-foreground: 38 92% 14%;
+
+    --success: 152 55% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 160 15% 20%;
+    --input: 160 15% 20%;
+    --ring: 152 58% 60%;
+
+    --sidebar-background: 153 71% 10%;
+    --sidebar-foreground: 60 20% 97.6%;
+    --sidebar-primary: 152 58% 70%;
+    --sidebar-primary-foreground: 153 71% 17%;
+    --sidebar-accent: 153 60% 16%;
+    --sidebar-accent-foreground: 60 20% 97.6%;
+    --sidebar-border: 153 60% 16%;
+    --sidebar-ring: 152 58% 70%;
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+    transition: background-color 200ms ease, color 150ms ease;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-style: italic;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none !important;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+/* Leaf pattern for login background */
+.leaf-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10 C20 20 10 30 15 40 C20 50 30 45 30 45 C30 45 40 50 45 40 C50 30 40 20 30 10Z' fill='%231D9E7520' /%3E%3C/svg%3E");
+  background-size: 80px 80px;
+}
+
+/* Animated counter */
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); filter: blur(4px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out both;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Stagger children */
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 80ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 160ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 320ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 400ms; }
