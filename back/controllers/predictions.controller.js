@@ -40,11 +40,37 @@ function calculateFeatures(project) {
   };
 }
 
+/**
+ * POST avec retries — le service IA (Render free tier) s'endort après 15 min
+ * d'inactivité ; son réveil ("cold start") peut prendre jusqu'à ~60-90s pendant
+ * lesquelles le proxy Render renvoie 502/503. On retente plusieurs fois avant
+ * d'abandonner.
+ */
+async function postWithRetry(url, data, { timeout, retries = 3, retryDelayMs = 5000 }) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await axios.post(url, data, { timeout });
+    } catch (err) {
+      const status = err.response?.status;
+      const isRetryable = status === 502 || status === 503 || status === 504 || err.code === 'ECONNRESET';
+      if (!isRetryable || attempt === retries) throw err;
+      console.warn(`[AI] Tentative ${attempt}/${retries} échouée (${status || err.code}) — réveil du service en cours, nouvelle tentative dans ${retryDelayMs / 1000}s...`);
+      await new Promise(r => setTimeout(r, retryDelayMs));
+    }
+  }
+}
+
 /** Traduction des erreurs de connexion Flask en message lisible. */
 function handleFlaskError(err, res) {
   if (err.code === 'ECONNREFUSED' || err.code === 'ETIMEDOUT' || err.code === 'ENOTFOUND') {
     return res.status(503).json({
       error: `Service IA indisponible (${FLASK_URL}). Vérifiez que predict_api.py est démarré.`,
+    });
+  }
+  if (err.response?.status) {
+    console.error(`[AI] Service IA a répondu ${err.response.status} après plusieurs tentatives.`);
+    return res.status(503).json({
+      error: 'Service IA en cours de démarrage (cold start Render). Merci de réessayer dans quelques secondes.',
     });
   }
   console.error('[AI]', err.message);
@@ -67,10 +93,10 @@ const getPrediction = async (req, res) => {
 
     const features = calculateFeatures(project);
 
-    const { data: prediction } = await axios.post(
+    const { data: prediction } = await postWithRetry(
       `${FLASK_URL}/predict`,
       features,
-      { timeout: 10_000 }
+      { timeout: 15_000, retries: 3, retryDelayMs: 5000 }
     );
 
     return res.json({
@@ -99,10 +125,10 @@ const getAllPredictions = async (req, res) => {
       features:   calculateFeatures(p),
     }));
 
-    const { data: predictions } = await axios.post(
+    const { data: predictions } = await postWithRetry(
       `${FLASK_URL}/predict/batch`,
       batch,
-      { timeout: 30_000 }
+      { timeout: 35_000, retries: 3, retryDelayMs: 5000 }
     );
 
     return res.json(predictions);
