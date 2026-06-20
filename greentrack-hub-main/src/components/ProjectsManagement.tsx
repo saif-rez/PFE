@@ -27,11 +27,14 @@ const ProjectsManagement: React.FC = () => {
   const [projAcronyme, setProjAcronyme]   = useState("");
   const [projCategorie, setProjCategorie] = useState("");
   const [projLaboratoire, setProjLaboratoire] = useState("");
+  const [projBudget, setProjBudget]       = useState("");
+  const [projDateDebut, setProjDateDebut] = useState("");
   const [projLoading, setProjLoading]     = useState(false);
 
   // ── Edit form ────────────────────────────────────────────────────────────
   const [editTarget, setEditTarget] = useState<{
     id: number; nom: string; acronyme: string; categorie: string; laboratoire: string;
+    budget: number; depenses: number; dateDebut: string;
   } | null>(null);
   const [editLoading, setEditLoading] = useState(false);
 
@@ -40,7 +43,10 @@ const ProjectsManagement: React.FC = () => {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   // ── Handlers ─────────────────────────────────────────────────────────────
-  const resetForm = () => { setProjNom(""); setProjAcronyme(""); setProjCategorie(""); setProjLaboratoire(""); };
+  const resetForm = () => {
+    setProjNom(""); setProjAcronyme(""); setProjCategorie(""); setProjLaboratoire("");
+    setProjBudget(""); setProjDateDebut("");
+  };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +58,8 @@ const ProjectsManagement: React.FC = () => {
         acronyme: projAcronyme.trim(),
         categorie: projCategorie,
         laboratoire: projLaboratoire.trim(),
+        budget: projBudget ? Number(projBudget) : 0,
+        date_debut: projDateDebut || null,
       });
       await refresh();
       toast.success(`Projet "${projNom.trim()}" créé avec succès`);
@@ -74,6 +82,9 @@ const ProjectsManagement: React.FC = () => {
         acronyme: editTarget.acronyme,
         categorie: editTarget.categorie,
         laboratoire: editTarget.laboratoire,
+        budget: editTarget.budget,
+        depenses: editTarget.depenses,
+        date_debut: editTarget.dateDebut || null,
       });
       await refresh();
       toast.success("Projet mis à jour avec succès");
@@ -132,6 +143,32 @@ const ProjectsManagement: React.FC = () => {
               <div className="space-y-2">
                 <Label>Coordinateur *</Label>
                 <Input value={editTarget.laboratoire} onChange={e => setEditTarget(t => t && ({ ...t, laboratoire: e.target.value }))} required />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label>Budget (TND)</Label>
+                  <Input
+                    type="number" min={0} step="0.01"
+                    value={editTarget.budget}
+                    onChange={e => setEditTarget(t => t && ({ ...t, budget: Number(e.target.value) }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Dépenses (TND)</Label>
+                  <Input
+                    type="number" min={0} step="0.01"
+                    value={editTarget.depenses}
+                    onChange={e => setEditTarget(t => t && ({ ...t, depenses: Number(e.target.value) }))}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Date de début</Label>
+                <Input
+                  type="date"
+                  value={editTarget.dateDebut}
+                  onChange={e => setEditTarget(t => t && ({ ...t, dateDebut: e.target.value }))}
+                />
               </div>
               <DialogFooter className="gap-2 sm:gap-0">
                 <Button type="button" variant="outline" onClick={() => setEditTarget(null)} disabled={editLoading}>Annuler</Button>
@@ -208,6 +245,21 @@ const ProjectsManagement: React.FC = () => {
                   <Label htmlFor="projLab">Coordinateur *</Label>
                   <Input id="projLab" value={projLaboratoire} onChange={e => setProjLaboratoire(e.target.value)} required placeholder="Ex: Prof. Ahmed Ben Ali" />
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="projBudget">Budget (TND)</Label>
+                  <Input
+                    id="projBudget" type="number" min={0} step="0.01"
+                    value={projBudget} onChange={e => setProjBudget(e.target.value)}
+                    placeholder="Ex: 150000"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="projDateDebut">Date de début</Label>
+                  <Input
+                    id="projDateDebut" type="date"
+                    value={projDateDebut} onChange={e => setProjDateDebut(e.target.value)}
+                  />
+                </div>
                 <Button type="submit" className="w-full" disabled={projLoading}>
                   {projLoading ? "Création…" : "Créer le projet"}
                 </Button>
@@ -245,6 +297,7 @@ const ProjectsManagement: React.FC = () => {
                           onClick={() => setEditTarget({
                             id: Number(p.id), nom: p.nom, acronyme: p.acronyme,
                             categorie: p.categorie, laboratoire: p.laboratoire,
+                            budget: p.budget, depenses: p.depenses, dateDebut: p.dateDebut,
                           })}
                         >
                           <Pencil className="w-4 h-4" /> Modifier
